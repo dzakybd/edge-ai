@@ -12,7 +12,7 @@ with open(title, 'rb') as pickle_file:
 host = '192.168.10.3'  # Server ip
 port = 4000
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind((host, port))
+s.bind(('', port))
 
 print("Server Started")
 while True:
