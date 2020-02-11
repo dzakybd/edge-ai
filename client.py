@@ -2,40 +2,38 @@
 import datetime
 import socket
 import json
-import pickle
 import pandas as pd
+from tqdm import tqdm
 
-m_subsets = 3
-x_test = pd.read_pickle('shared/x_test.pkl')
-with open('shared/feature_subsets.pkl', 'rb') as pickle_file:
-    feature_subsets = pickle.load(pickle_file)
-with open('shared/k_best_index.pkl', 'rb') as pickle_file:
-    k_best_index = pickle.load(pickle_file)
+#  reading the data
+data_ori = pd.read_csv('uci-secom.csv')
+data_ori = data_ori.drop(['Time'], axis = 1)
+data_ori.loc[data_ori['Fault'] == 1, 'Fault'] = 1
+data_ori.loc[data_ori['Fault'] == -1, 'Fault'] = 0
+data_ori = data_ori.iloc[:, :-1]
 
-server = ('192.168.10.3', 4000)
+# getting the shape of the data
+print(data_ori.shape)
+ip = '192.168.10.3'
+server = (ip, 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(server)
 
-# Test on each edge
-subset_i = 0
-x_test_subset = x_test.loc[:, feature_subsets[subset_i]]
-#
-# # Test on Cloud-k
-# x_test_subset = x_test.loc[:, k_best_index]
-#
-# # Test on Cloud-all
-# x_test_subset = x_test
-
-start = datetime.datetime.now()
-for x in x_test_subset.values:
-    x = x.tolist()
-    message = json.dumps({"msg": x})
-    s.sendto(message.encode(), server)
-    data, addr = s.recvfrom(1024)
-    data = json.loads(data.decode())
-    y_test_pred = data.get("msg")
-    print("Received from server: ", y_test_pred)
+latency = {}
+for (columnName, columnData) in tqdm(data_ori.iteritems()):
+    start = datetime.datetime.now()
+    for x in columnData.values:
+        message = json.dumps({"msg": x})
+        s.sendto(message.encode(), server)
+        data, addr = s.recvfrom(1024)
+        data = json.loads(data.decode())
+        data.get("msg")
+        # print("Received from server: ", data.get("msg"))
+    end = datetime.datetime.now()
+    interval = (end - start).microseconds / 1000
+    latency[str(columnName)] = interval
+    # print(columnName, interval)
 s.close()
-end = datetime.datetime.now()
-interval = end - start
-print(interval)
+
+latency_data = pd.DataFrame.from_dict(latency, orient='index', columns=['Latency'])
+latency_data.to_csv(ip+'latency_data.csv')
