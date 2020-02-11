@@ -14,20 +14,25 @@ data_ori = data_ori.iloc[:, :-1]
 
 # getting the shape of the data
 print(data_ori.shape)
-ip = '192.168.10.3'
+ip = '128.199.240.41'
 server = (ip, 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(server)
 
+
 latency = {}
 for (columnName, columnData) in tqdm(data_ori.iteritems()):
     start = datetime.datetime.now()
-    for x in columnData.values:
+    counter = 0
+    for x in tqdm(columnData.values):
         message = json.dumps({"msg": x})
         s.sendto(message.encode(), server)
         data, addr = s.recvfrom(1024)
-        data = json.loads(data.decode())
-        data.get("msg")
+        counter += 1
+        if counter == 10:
+            break
+        # data = json.loads(data.decode())
+        # data.get("msg")
         # print("Received from server: ", data.get("msg"))
     end = datetime.datetime.now()
     interval = (end - start).microseconds / 1000
