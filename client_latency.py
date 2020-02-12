@@ -14,8 +14,8 @@ data_ori = data_ori.iloc[:, :-1]
 
 # getting the shape of the data
 print(data_ori.shape)
-# ip = '128.199.240.41'
-ip = '192.168.10.4'
+ip = '128.199.240.41'
+# ip = '192.168.10.4'
 server = (ip, 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(server)
@@ -30,7 +30,7 @@ for (columnName, columnData) in tqdm(data_ori.iteritems()):
         s.sendto(message.encode(), server)
         data, addr = s.recvfrom(1024)
         counter += 1
-        if counter == 10:
+        if counter == 1:
             break
         # data = json.loads(data.decode())
         # data.get("msg")
@@ -41,5 +41,5 @@ for (columnName, columnData) in tqdm(data_ori.iteritems()):
     # print(columnName, interval)
 s.close()
 
-latency_data = pd.DataFrame.from_dict(latency, orient='index', columns=['Latency'])
-latency_data.to_csv(ip+'latency_data.csv')
+# latency_data = pd.DataFrame.from_dict(latency, orient='index', columns=['Latency'])
+# latency_data.to_csv(ip+'latency_data.csv')
