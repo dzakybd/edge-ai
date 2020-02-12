@@ -1,0 +1,10 @@
+Scenario : test_dt
+Pass/Fail : 300/286
+              precision    recall  f1-score   support
+
+        Pass       0.93      0.87      0.90       300
+        Fail       0.87      0.93      0.90       286
+
+    accuracy                           0.90       586
+   macro avg       0.90      0.90      0.90       586
+weighted avg       0.90      0.90      0.90       586
