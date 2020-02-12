@@ -14,7 +14,8 @@ data_ori = data_ori.iloc[:, :-1]
 
 # getting the shape of the data
 print(data_ori.shape)
-ip = '128.199.240.41'
+# ip = '128.199.240.41'
+ip = '192.168.10.4'
 server = (ip, 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(server)
@@ -24,7 +25,7 @@ latency = {}
 for (columnName, columnData) in tqdm(data_ori.iteritems()):
     start = datetime.datetime.now()
     counter = 0
-    for x in tqdm(columnData.values):
+    for x in columnData.values:
         message = json.dumps({"msg": x})
         s.sendto(message.encode(), server)
         data, addr = s.recvfrom(1024)

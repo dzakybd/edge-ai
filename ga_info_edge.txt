@@ -1,0 +1,6 @@
+
+Algorithm: Genetic algorithm
+Problem: CLFS using edge latency
+Number of features: 217
+Fitness: 0.3585648872850368
+Computing time: 376.25993180274963
