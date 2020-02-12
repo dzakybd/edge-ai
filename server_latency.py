@@ -2,7 +2,6 @@
 import socket
 import json
 
-host = '192.168.10.4'  # Server ip
 port = 4000
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind(('', port))
