@@ -2,17 +2,21 @@
 import numpy as np
 import socket
 import json
-from keras.models import load_model
+import pickle
 
-title = 'model_all.h5'
+# title = 'model_lr.pkl'
+# title = 'model_nb.pkl'
+# title = 'model_dt.pkl'
+# title = 'model_svm.pkl'
+title = 'model_knn.pkl'
 
-
-clf = load_model(title)
-
+clf = pickle.load(open(title, 'rb'))
 
 port = 4000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', port))
+
+print('Test using', title)
 
 s.listen(1)
 while True:
@@ -33,7 +37,7 @@ while True:
                     data = json.loads(msg)
                     x = np.array(data.get("msg"))
                     x = np.array(x).reshape(1, -1)
-                    y = clf.predict_classes(x)
+                    y = clf.predict(x)
                     y = np.array(y).tolist()
                     message = json.dumps({"msg": y}).encode()
                     print('send result', y)

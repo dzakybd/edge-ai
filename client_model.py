@@ -12,10 +12,17 @@ server = (ip, 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(server)
 
-teston = 'all'
+# teston = 'all'
 # teston = 'cloud'
 # teston = 'edge'
 
+# teston = 'lr'
+# teston = 'nb'
+# teston = 'dt'
+# teston = 'svm'
+teston = 'knn'
+
+print('teston', teston)
 
 data_prepro_sample = pd.read_pickle('data_prepro_sample.pkl')
 x_sample = data_prepro_sample.iloc[:, :-1]
@@ -24,14 +31,14 @@ if teston == 'cloud':
     with open('variables_cloud.pkl', 'rb') as pickle_file:
         variables_cloud = pickle.load(pickle_file)
     x_sample = x_sample.loc[:, variables_cloud]
-
-if teston == 'edge':
+elif teston == 'all':
+    x_sample = x_sample
+else:
     with open('variables_edge.pkl', 'rb') as pickle_file:
         variables_edge = pickle.load(pickle_file)
     x_sample = x_sample.loc[:, variables_edge]
 
 try:
-    print('teston', teston)
     response = []
     for idx, x in enumerate(x_sample.values):
         start = datetime.datetime.now()
