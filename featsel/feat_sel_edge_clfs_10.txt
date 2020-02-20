@@ -1,0 +1,6 @@
+Algorithm: CLFS using edge_clfs_10 latency
+Number of evaluations: 50000
+Non dominated solution: 86
+Computing time: 118.1796338558197
+Selected features: 10
+Fitness: 9.689639876046158 0.4341021440173597 40.95499999999999

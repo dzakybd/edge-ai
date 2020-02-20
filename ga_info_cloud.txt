@@ -1,6 +1,0 @@
-
-Algorithm: Genetic algorithm
-Problem: CLFS using cloud latency
-Number of features: 204
-Fitness: 0.33183020975606337
-Computing time: 377.4730622768402

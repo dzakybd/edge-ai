@@ -1,0 +1,8 @@
+Benerin grammatical
+
+
+cloud-clfs 30rb 28
+pca 96 (90% variance)
+edge-clfs 10rb 148
+edge-clfs 30rb 45
+

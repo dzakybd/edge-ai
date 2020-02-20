@@ -1,0 +1,6 @@
+Algorithm: CLFS using cloud_clfs_60 latency
+Number of evaluations: 5000
+Non dominated solution: 83
+Computing time: 140.0675048828125
+Selected features: 60
+Fitness: 57.89149406965813 60.32784101880575 9577.990000000002

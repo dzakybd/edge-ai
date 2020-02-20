@@ -1,0 +1,3 @@
+Algorithm: PCA
+Selected features: 96
+Total components variance: 0.9

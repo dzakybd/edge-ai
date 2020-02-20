@@ -1,0 +1,11 @@
+Scenario : test_edge_pca
+Pass/Fail : 300/286
+Recall Pass/Fail : 0.9466666666666667/1.0
+              precision    recall  f1-score   support
+
+        Pass       1.00      0.95      0.97       300
+        Fail       0.95      1.00      0.97       286
+
+    accuracy                           0.97       586
+   macro avg       0.97      0.97      0.97       586
+weighted avg       0.97      0.97      0.97       586

@@ -1,0 +1,11 @@
+Scenario : test_lr
+Pass/Fail : 300/286
+Recall Pass/Fail : 0.7466666666666667/0.8146853146853147
+              precision    recall  f1-score   support
+
+        Pass       0.81      0.75      0.78       300
+        Fail       0.75      0.81      0.78       286
+
+    accuracy                           0.78       586
+   macro avg       0.78      0.78      0.78       586
+weighted avg       0.78      0.78      0.78       586
