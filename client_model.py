@@ -1,0 +1,79 @@
+# Client
+import datetime
+import socket
+import json
+import pandas as pd
+import pickle
+from tqdm import tqdm
+
+dir_prepro = 'prepro/'
+dir_featsel = 'featsel/'
+dir_shared = 'shared/'
+
+teston = 'all'
+# teston = 'cloud'
+# teston = 'clfs_60'
+# teston = 'pca'
+# teston = 'cfs_60'
+# teston = 'clfs_20'
+# teston = 'clfs_40'
+# teston = 'clfs_80'
+# teston = 'clfs_100'
+
+# teston = 'lr'
+# teston = 'nb'
+# teston = 'dt'
+# teston = 'svm'
+# teston = 'knn'
+
+print('teston', teston)
+
+data_prepro_sample = pd.read_pickle(dir_prepro+'data_prepro_sample.pkl')
+x_sample = data_prepro_sample.iloc[:, :-1]
+
+if teston == 'cloud':
+    with open(dir_featsel+'variables_cloud.pkl', 'rb') as pickle_file:
+        variables_cloud = pickle.load(pickle_file)
+    x_sample = x_sample.loc[:, variables_cloud]
+elif teston == 'all':
+    x_sample = x_sample
+elif teston == 'lr' or teston == 'nb' or teston == 'dt' or teston == 'svm' or teston == 'knn':
+    with open(dir_featsel+'variables_edge_clfs_60.pkl', 'rb') as pickle_file:
+        variables_edge = pickle.load(pickle_file)
+    x_sample = x_sample.iloc[:, variables_edge]
+else:
+    with open(dir_featsel+'variables_edge_{}.pkl'.format(teston), 'rb') as pickle_file:
+        variables_edge = pickle.load(pickle_file)
+    x_sample = x_sample.iloc[:, variables_edge]
+
+# ip = '128.199.240.41'
+ip = '192.168.10.4'
+server = (ip, 4000)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(server)
+
+try:
+    response = []
+    for idx, x in enumerate(x_sample.values):
+        start = datetime.datetime.now()
+        x = x.tolist()
+        message = json.dumps({"msg": x}).encode()
+        s.sendall(message)
+        s.send(b'!')
+        data = s.recv(16)
+        temp = data.decode()
+        data = json.loads(temp)
+        y = data.get("msg")
+        print(idx, y)
+        end = datetime.datetime.now()
+        interval = (end - start).microseconds / 1000
+        response.append(interval)
+        if idx == 99:
+            break
+finally:
+    print('closing socket')
+    s.close()
+
+
+response_data = pd.DataFrame(response, columns=['Time'])
+response_data.to_csv(dir_shared+'{}_response_data_{}.csv'.format(ip, teston))
