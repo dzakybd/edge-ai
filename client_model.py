@@ -4,21 +4,26 @@ import socket
 import json
 import pandas as pd
 import pickle
-from tqdm import tqdm
+import numpy as np
+import time
 
 dir_prepro = 'prepro/'
 dir_featsel = 'featsel/'
 dir_shared = 'shared/'
 
 
-ip = '128.199.240.41'
-# ip = '192.168.10.4'
+# ip = '128.199.240.41'
+# name = 'cloud'
+
+ip = '192.168.10.4'
+name = 'edge'
+
 server = (ip, 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(server)
 
 # teston = 'all'
-teston = 'cloud'
+# teston = 'cloud'
 # teston = 'pca'
 # teston = 'cfs_60'
 # teston = 'clfs_20'
@@ -31,7 +36,7 @@ teston = 'cloud'
 # teston = 'nb'
 # teston = 'dt'
 # teston = 'svm'
-# teston = 'knn'
+teston = 'knn'
 
 print('teston', teston)
 
@@ -58,28 +63,45 @@ else:
 
 print('shape', x_sample.shape)
 
-try:
-    response = []
-    for idx, x in enumerate(x_sample.values):
-        start = datetime.datetime.now()
-        x = x.tolist()
-        message = json.dumps({"msg": x}).encode()
-        s.sendall(message)
-        s.send(b'!')
-        data = s.recv(16)
-        temp = data.decode()
-        data = json.loads(temp)
-        y = data.get("msg")
-        print(idx, y)
-        end = datetime.datetime.now()
-        interval = (end - start).microseconds / 1000
-        response.append(interval)
-        if idx == 99:
-            break
-finally:
-    print('closing socket')
-    s.close()
+min_time = max_time = var_time = 0
 
+while min_time <= 0 or max_time <= 0 or var_time <= 0:
+    info = np.ones(300)
+    info = info.tolist()
+    min_time = 9999
+    max_time = -1
+    var_time = 0
+    try:
+        response = []
+        for idx, x in enumerate(x_sample.values):
+            start = datetime.datetime.now()
+            x = x.tolist()
+            message = json.dumps({"msg": x, "info": info}).encode()
+            s.sendall(message)
+            s.send(b'!')
+            data = s.recv(16)
+            temp = data.decode()
+            data = json.loads(temp)
+            y = data.get("msg")
+            print(idx, y)
+            end = datetime.datetime.now()
+            interval = (end - start).microseconds / 1000
+            if interval < min_time:
+                min_time = interval
+            if interval > max_time:
+                max_time = interval
+            response.append(interval)
+            if idx == 49:
+                break
+    finally:
+        print('End')
 
+    var_time = np.var(response)
+    print('min_time', min_time)
+    print('max_time', max_time)
+    print('var_time', var_time)
+    time.sleep(3)
+
+s.close()
 response_data = pd.DataFrame(response, columns=['Time'])
-response_data.to_csv(dir_shared+'{}_response_data_{}.csv'.format(ip, teston))
+response_data.to_csv(dir_shared+'{}_{}_response_time.csv'.format(name, teston))

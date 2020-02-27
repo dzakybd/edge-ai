@@ -1,0 +1,80 @@
+edge clfs 20
+min_time 0.997
+max_time 4.986
+var_time 0.8212756400000002
+
+edge clfs 40
+min_time 0.98
+max_time 5.985
+var_time 1.6763250100000002
+
+edge clfs 60
+min_time 0.998
+max_time 7.991
+var_time 2.1593862176
+
+edge cfs 60
+min_time 1.957
+max_time 11.926
+var_time 3.2669564404
+
+edge clfs 80
+min_time 1.915
+max_time 17.94
+var_time 6.528466849600001
+
+edge clfs 100
+min_time 1.971
+max_time 18.909
+var_time 7.165257553599998
+
+edge pca
+min_time 2.975
+max_time 19.98
+var_time 8.510576170000002
+
+edge all
+min_time 4.941
+max_time 23.89
+var_time 15.864768976399999
+
+cloud cloud
+min_time 160.574
+max_time 229.351
+var_time 278.208638
+
+cloud all
+min_time 194.556
+max_time 268.279
+var_time 399.2354359423999
+
+----
+edge cfs 60
+min_time 1.957
+max_time 11.926
+var_time 3.2669564404
+
+edge lr
+min_time 0.996
+max_time 9.004
+var_time 1.4714517235999998
+
+edge nb
+min_time 0.988
+max_time 5.984
+var_time 1.24971501
+
+edge dt
+min_time 0.958
+max_time 2.994
+var_time 0.5428571823999999
+
+edge svm
+min_time 0.961
+max_time 7.979
+var_time 1.9448879215999997
+
+edge knn
+min_time 0.943
+max_time 10.971
+var_time 3.3764140596

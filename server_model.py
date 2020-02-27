@@ -3,37 +3,38 @@ import numpy as np
 import socket
 import json
 import pickle
+from keras.models import load_model
 
-dir_dataset = 'dataset/'
-dir_prepro = 'prepro/'
-dir_featsel = 'featsel/'
 dir_model = 'model/'
 
+use_nn = False
 # title = 'model_lr.pkl'
 # title = 'model_nb.pkl'
 # title = 'model_dt.pkl'
 # title = 'model_svm.pkl'
-# title = 'model_knn.pkl'
-# use_nn = False
+title = 'model_knn.pkl'
 
-title = 'model_all.h5'
+# use_nn = True
+# title = 'model_all.h5'
 # title = 'model_cloud.h5'
-# title = 'model_edge_clfs_60.h5'
 # title = 'model_edge_pca.h5'
 # title = 'model_edge_cfs_60.h5'
 # title = 'model_edge_clfs_20.h5'
 # title = 'model_edge_clfs_40.h5'
+# title = 'model_edge_clfs_60.h5'
 # title = 'model_edge_clfs_80.h5'
 # title = 'model_edge_clfs_100.h5'
-use_nn = True
 
-clf = pickle.load(open(dir_model+title, 'rb'))
+print('Test using', title)
+
+if use_nn:
+    clf = load_model(dir_model+title)
+else:
+    clf = pickle.load(open(dir_model+title, 'rb'))
 
 port = 4000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', port))
-
-print('Test using', title)
 
 s.listen(1)
 while True:
